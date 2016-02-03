@@ -41,7 +41,7 @@ int main(){
 
     char col_name[256];
 
-    scale = 4;
+    scale = 1;
     cycles = 0;
 
     lp = glp_create_prob();
@@ -50,8 +50,8 @@ int main(){
 
     glp_init_iocp(&parm_mip);
 
-    parm_mip.msg_lev    = GLP_MSG_OFF;      // Output level
-    //parm_mip.msg_lev    = GLP_MSG_ALL;      // Output level
+    //parm_mip.msg_lev    = GLP_MSG_OFF;      // Output level
+    parm_mip.msg_lev    = GLP_MSG_ALL;      // Output level
 
     parm_mip.presolve   = GLP_ON;           // MIP presolver
     //parm_mip.presolve   = GLP_OFF;          //
@@ -236,9 +236,19 @@ int main(){
 
         printf("\nStep: %d \n found %d cycles\n", cycles, all_cycles.size());
 
-        for ( int k = 0 ; k < all_cycles.size() ; k++ ){
+        int ind   = 0;
 
+        for ( int k = 0 ; k < all_cycles.size() ; k++ ){
+            if (all_cycles[k].size() < all_cycles[ind].size()){
+                ind = k;
+            }
+        }
+
+        for ( int k = 0 ; k < all_cycles.size() ; k++ ){
             std::vector<int> small = all_cycles[k];
+
+            //if ( small.size() > 6 ) continue;
+            if ( all_cycles[k].size() != all_cycles[ind].size() ) continue;
 
             printf(" -> removing cycle of size %d: ", small.size() - 1);
 
@@ -439,7 +449,7 @@ void save_svg(char *fname, std::vector<std::vector<double> > &solution, int n, s
 
     for ( int i = 0 ; i < n ; i++ ){
         fprintf(fptr,"<circle cx=\"%d\" cy=\"%d\" r=\"5\" stroke=\"black\" stroke-width=\"2\" fill=\"red\"/>\n", nodes[i].posx * scale, nodes[i].posy * scale);
-        fprintf(fptr,"<text x=\"%d\" y=\"%d\" fill=\"black\">%d</text>", (nodes[i].posx * scale) + 5 , (nodes[i].posy * scale)-2 , i+1);
+        //fprintf(fptr,"<text x=\"%d\" y=\"%d\" fill=\"black\">%d</text>", (nodes[i].posx * scale) + 5 , (nodes[i].posy * scale)-2 , i+1);
     }
 
     fprintf(fptr,"</svg>\n");
