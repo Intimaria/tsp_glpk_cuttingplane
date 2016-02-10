@@ -8,10 +8,11 @@
 
 reset
 
-#set terminal pngcairo size 1920,1080 enhanced font 'Verdana,9'
 #set terminal pngcairo size 800,600 enhanced font 'Verdana,9'
-set terminal epslatex font 'Verdana,9'
+#set terminal pngcairo size 1920,1080 enhanced font 'Verdana,9'
+#set output 'tsp.png'
 
+set terminal epslatex font 'Verdana,9'
 set output 'tsp.tex'
 
 set style line 11 lc rgb '#808080' lt 1
