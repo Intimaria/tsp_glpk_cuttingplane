@@ -9,4 +9,4 @@ y = int(sys.argv[3])
 print(n)
 
 for i in range(0, n):
-    print(random.randint(10,x), random.randint(10,y))
+    print(random.randint(0,x), random.randint(0,y))
