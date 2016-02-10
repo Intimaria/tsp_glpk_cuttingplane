@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
+#include <ctime>
 
 typedef struct {
     int x, y;
@@ -22,7 +23,7 @@ std::vector<int>                find_smallest_cycle( std::vector<std::vector<dou
 std::vector<std::vector<int> >  find_all_cycles( std::vector<std::vector<double> > &solution, int n );
 void                            save_svg(char *fname, std::vector<std::vector<double> > &solution, int n, std::vector<node> nodes, int scale );
 
-int main(){
+int main(int argc, char *argv[]){
     std::vector<node>   nodes;
     std::vector<std::vector<double> > arcs;
     std::vector<std::vector<double> > solution;
@@ -30,6 +31,8 @@ int main(){
     glp_prob *lp;
     glp_iocp parm_mip;
     glp_smcp parm_spx;
+
+    time_t t = clock();
 
     double z;
 
@@ -41,7 +44,7 @@ int main(){
 
     char col_name[256];
 
-    scale = 1;
+    scale = 4;
     cycles = 0;
 
     lp = glp_create_prob();
@@ -53,14 +56,33 @@ int main(){
     //parm_mip.msg_lev    = GLP_MSG_OFF;      // Output level
     parm_mip.msg_lev    = GLP_MSG_ALL;      // Output level
 
-    parm_mip.presolve   = GLP_ON;           // MIP presolver
-    //parm_mip.presolve   = GLP_OFF;          //
+    if ( atoi(argv[1]) == 0 )
+        parm_mip.presolve   = GLP_OFF;          //
+    else
+        parm_mip.presolve   = GLP_ON;           // MIP presolver
 
-    //parm_mip.gmi_cuts   = GLP_ON;           // Gomory's intiger cuts
-    //parm_mip.gmi_cuts   = GLP_OFF;          //
+    if ( atoi(argv[2]) == 0 )
+        parm_mip.gmi_cuts   = GLP_OFF;          //
+    else
+        parm_mip.gmi_cuts   = GLP_ON;           // Gomory's intiger cuts
 
-    //parm_mip.mir_cuts   = GLP_ON;           // Mixed Integer Rounding Cuts
-    //parm_mip.mir_cuts   = GLP_OFF;          //
+    if ( atoi(argv[3]) == 0 )
+        parm_mip.mir_cuts   = GLP_OFF;          //
+    else
+        parm_mip.mir_cuts   = GLP_ON;           // Mixed Integer Rounding Cuts
+
+    if ( atoi(argv[4]) == 0 )
+        parm_mip.pp_tech    = GLP_PP_NONE;      // No preprocessing
+    else if ( atoi(argv[4]) == 1 )
+        parm_mip.pp_tech    = GLP_PP_ROOT;      // Preprocessin only on root node
+    else
+        parm_mip.pp_tech    = GLP_PP_ALL;       // Preprocessin on all nodes
+
+    if ( atoi(argv[5]) == 0 )
+        parm_mip.fp_heur    = GLP_OFF;          // Feasibility pump heuristic
+    else
+        parm_mip.fp_heur    = GLP_ON;           // Feasibility pump heuristic
+
 
     //parm_mip.cov_cuts   = GLP_ON;           // Mixed Cover Cuts
     //parm_mip.cov_cuts   = GLP_OFF;          //
@@ -79,12 +101,6 @@ int main(){
     //parm_mip.bt_tech    = GLP_BT_BLB;       // Becktracking method: Best Local Bound
     //parm_mip.bt_tech    = GLP_BT_BPH;       // Becktracking method: Best projection Heuristic
 
-    //parm_mip.pp_tech    = GLP_PP_NONE;      // No preprocessing
-    //parm_mip.pp_tech    = GLP_PP_ROOT;      // Preprocessin only on root node
-    parm_mip.pp_tech    = GLP_PP_ALL;       // Preprocessin on all nodes
-
-    //parm_mip.fp_heur    = GLP_ON;           // Feasibility pump heuristic
-    //parm_mip.fp_heur    = GLP_OFF;          // Feasibility pump heuristic
 
     glp_init_smcp(&parm_spx);
     parm_spx.msg_lev = GLP_MSG_ERR;
@@ -190,13 +206,7 @@ int main(){
 
 
     /*
-     *
-     *
-     *
-     *
-     *
-     *
-     *
+     * Main loop
      */
     do {
         cycles++;
@@ -205,7 +215,7 @@ int main(){
         glp_intopt(lp, &parm_mip);
 
         z = glp_get_obj_val(lp);
-        printf("z = %f;\n", z);
+        //printf("z = %f;\n", z);
 
         /*
          * Saves the graph so far
@@ -221,7 +231,7 @@ int main(){
         }
 
         char fname[256];
-        sprintf(fname, "w_%05d.svg", cycles);
+        sprintf(fname, "w_%s_%05d.svg", argv[6], cycles);
         save_svg(fname, solution, n, nodes, scale);
 
         /*
@@ -230,11 +240,11 @@ int main(){
         std::vector<std::vector<int> > all_cycles = find_all_cycles(solution, n);
 
         if ( all_cycles.size() == 1 ) {
-            printf("Done!!\n");
+            //printf("Done!!\n");
             break;
         }
 
-        printf("\nStep: %d \n found %d cycles\n", cycles, all_cycles.size());
+        //printf("\nStep: %d \n found %d cycles\n", cycles, all_cycles.size());
 
         int ind   = 0;
 
@@ -248,14 +258,14 @@ int main(){
             std::vector<int> small = all_cycles[k];
 
             //if ( small.size() > 6 ) continue;
-            if ( all_cycles[k].size() != all_cycles[ind].size() ) continue;
+            //if ( all_cycles[k].size() != all_cycles[ind].size() ) continue;
 
-            printf(" -> removing cycle of size %d: ", small.size() - 1);
+            //printf(" -> removing cycle of size %d: ", small.size() - 1);
 
             for ( int i = 0 ; i < small.size() ; i++ ) {
-                printf("%d ", small[i]+1);
+                //printf("%d ", small[i]+1);
             }
-            printf("\n");
+            //printf("\n");
 
             int new_row = glp_add_rows(lp, 1);
 
@@ -278,10 +288,10 @@ int main(){
             glp_set_row_bnds(lp, new_row, GLP_UP, 0.0, small.size()-2);
         }
 
-        if ( cycles > 2000 ) {
-            printf("Took too long! \nAborting!\n");
-            break;
-        }
+        //if ( cycles > 2000 ) {
+            //printf("Took too long! \nAborting!\n");
+            //break;
+        //}
     } while ( true );
 
 
@@ -291,6 +301,9 @@ int main(){
      */
     glp_delete_prob(lp);
     glp_free_env();
+
+    t = clock() - t;
+    fprintf(stdout, "%d %f\n", n, (double)t/CLOCKS_PER_SEC);
 
     return EXIT_SUCCESS;
 
@@ -396,24 +409,32 @@ void save_svg(char *fname, std::vector<std::vector<double> > &solution, int n, s
     FILE *fptr;
     fptr = fopen(fname, "wt");
 
-    int screenx, screeny;
+    int screenx;
+    int screeny;
 
-    screenx = 0;
-    screeny = 0;
+    int minx = 1<<20;
+    int miny = 1<<20;
+    int maxx = 0;
+    int maxy = 0;
+
+    screenx = 800;
+    screeny = 600;
 
     for ( int i = 0 ; i < n ; i++ ) {
-        if (nodes[i].posx > screenx)
-            screenx = nodes[i].posx;
+        if (nodes[i].posx < minx)
+            minx = nodes[i].posx;
 
-        if (nodes[i].posy > screeny)
-            screeny = nodes[i].posy;
+        if (nodes[i].posy < miny)
+            miny = nodes[i].posy;
+
+        if (nodes[i].posx > maxx)
+            maxx = nodes[i].posx;
+
+        if (nodes[i].posy > maxy)
+            maxy = nodes[i].posy;
     }
 
-    screenx *= scale;
-    screeny *= scale;
-
-    screenx += 10;
-    screeny += 10;
+    //printf("%d %d %d %d\n", minx, miny, maxx, maxy);
 
     fprintf(fptr,"<?xml version=\"1.0\" standalone=\"no\"?>\n");
     fprintf(fptr,"<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \n");
@@ -438,9 +459,12 @@ void save_svg(char *fname, std::vector<std::vector<double> > &solution, int n, s
     for ( int i = 0 ; i < n ; i++ ) {
         for ( int j = 0 ; j < n ; j++ ) {
             if ( solution[i][j] == 1 ) {
-                fprintf(fptr,"<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" style=\"stroke:black;stroke-width:2\"/>\n", nodes[i].posx * scale, nodes[i].posy * scale, nodes[j].posx * scale, nodes[j].posy * scale);
+                fprintf(fptr,"<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" style=\"stroke:black;stroke-width:2\"/>\n", (int) ((screenx * 1.0 ) * ( nodes[i].posx - minx ) / ( maxx - minx ) + ( screenx * 0.05 )),
+                                                                                                                        (int) ((screeny * 1.0 ) * ( nodes[i].posy - miny ) / ( maxy - miny ) + ( screeny * 0.05 )),
+                                                                                                                        (int) ((screenx * 1.0 ) * ( nodes[j].posx - minx ) / ( maxx - minx ) + ( screenx * 0.05 )),
+                                                                                                                        (int) ((screeny * 1.0 ) * ( nodes[j].posy - miny ) / ( maxy - miny ) + ( screeny * 0.05 )));
             } else if (solution[i][j] > 0 && solution[i][j] < 1 ) {
-                fprintf(fptr,"<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" style=\"stroke:red;stroke-dasharray: 3 3;stroke-width:2\"/>\n", nodes[i].posx * scale, nodes[i].posy * scale, nodes[j].posx * scale, nodes[j].posy * scale);
+                //fprintf(fptr,"<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" style=\"stroke:red;stroke-dasharray: 3 3;stroke-width:2\"/>\n", nodes[i].posx * scale, nodes[i].posy * scale, nodes[j].posx * scale, nodes[j].posy * scale);
             } else {
                 //fprintf(fptr,"<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" style=\"stroke:grey;stroke-dasharray: 3 3;stroke-width:1\"/>\n", nodes[i].posx * scale, nodes[i].posy * scale, nodes[j].posx * scale, nodes[j].posy * scale);
             }
@@ -448,7 +472,8 @@ void save_svg(char *fname, std::vector<std::vector<double> > &solution, int n, s
     }
 
     for ( int i = 0 ; i < n ; i++ ){
-        fprintf(fptr,"<circle cx=\"%d\" cy=\"%d\" r=\"5\" stroke=\"black\" stroke-width=\"2\" fill=\"red\"/>\n", nodes[i].posx * scale, nodes[i].posy * scale);
+        fprintf(fptr,"<circle cx=\"%d\" cy=\"%d\" r=\"5\" stroke=\"black\" stroke-width=\"2\" fill=\"red\"/>\n", (int) ((screenx * 1.0 ) * ( nodes[i].posx - minx ) / ( maxx - minx ) + ( screenx * 0.05 )),
+                                                                                                                 (int) ((screeny * 1.0 ) * ( nodes[i].posy - miny ) / ( maxy - miny ) + ( screeny * 0.05 )));
         //fprintf(fptr,"<text x=\"%d\" y=\"%d\" fill=\"black\">%d</text>", (nodes[i].posx * scale) + 5 , (nodes[i].posy * scale)-2 , i+1);
     }
 
