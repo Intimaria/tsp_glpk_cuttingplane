@@ -149,7 +149,7 @@ int main(int argc, char *argv[]){
 
 
     /*
-     * Names each column/variable and sets the x[i,j] variables bounds, 
+     * Names each column/variable and sets the x[i,j] variables bounds,
      * sets the variables to int, and sets the bounds for assigment constraints
      */
     for ( int i = 0 ; i < n ; i++ ) {
