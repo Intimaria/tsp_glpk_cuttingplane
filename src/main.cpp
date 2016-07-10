@@ -147,6 +147,10 @@ int main(int argc, char *argv[]){
         }
     }
 
+    /*
+     * Builds the matrix, row by row.
+     * The graph adjacency matrix if flattened, get_index aids that.
+     */
     for ( int i = 0 ; i < n ; i++ ) {
         int new_row = glp_add_rows(lp, 1);
 
@@ -191,7 +195,7 @@ int main(int argc, char *argv[]){
     do {
         cycles++;
 
-        glp_simplex(lp, &parm_spx);
+        //glp_simplex(lp, &parm_spx);
         glp_intopt(lp, &parm_mip);
 
         z = glp_get_obj_val(lp);
@@ -211,7 +215,7 @@ int main(int argc, char *argv[]){
         }
 
         char fname[256];
-        sprintf(fname, "w_%s_%05d.svg", argv[6], cycles);
+        sprintf(fname, "w_%s_%05d.svg", "", cycles);
         save_svg(fname, solution, n, nodes, scale);
 
         /*
