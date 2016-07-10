@@ -25,8 +25,8 @@ int main(int argc, char *argv[]){
     double z;
 
     int n;
-    int n_constraints;
-    int non_zeros;
+    //int n_constraints;
+    //int non_zeros;
     int scale;
     int cycles;
 
@@ -228,13 +228,13 @@ int main(int argc, char *argv[]){
 
         int ind   = 0;
 
-        for ( int k = 0 ; k < all_cycles.size() ; k++ ){
+        for ( unsigned int k = 0 ; k < all_cycles.size() ; k++ ){
             if (all_cycles[k].size() < all_cycles[ind].size()){
                 ind = k;
             }
         }
 
-        for ( int k = 0 ; k < all_cycles.size() ; k++ ){
+        for ( unsigned int k = 0 ; k < all_cycles.size() ; k++ ){
             std::vector<int> small = all_cycles[k];
 
             //if ( small.size() > 6 ) continue;
@@ -242,9 +242,9 @@ int main(int argc, char *argv[]){
 
             //printf(" -> removing cycle of size %d: ", small.size() - 1);
 
-            for ( int i = 0 ; i < small.size() ; i++ ) {
+            //for ( int i = 0 ; i < small.size() ; i++ ) {
                 //printf("%d ", small[i]+1);
-            }
+            //}
             //printf("\n");
 
             int new_row = glp_add_rows(lp, 1);
@@ -255,7 +255,7 @@ int main(int argc, char *argv[]){
             row.push_back(0);
             val.push_back(0);
 
-            for ( int i = 0 ; i < small.size()-1 ; i++ ) {
+            for ( unsigned int i = 0 ; i < small.size()-1 ; i++ ) {
                 int index = get_index(small[i], small[i+1], n);
 
                 //printf("%d %d %d %02d %d\n", i, small[i], small[i+1], index, small.size());
@@ -283,7 +283,7 @@ int main(int argc, char *argv[]){
     glp_free_env();
 
     t = clock() - t;
-    fprintf(stdout, "%d %f\n", n, (double)t/CLOCKS_PER_SEC);
+    fprintf(stdout, "%d %f %.3f\n", n, (double)t/CLOCKS_PER_SEC, z);
 
     return EXIT_SUCCESS;
 
