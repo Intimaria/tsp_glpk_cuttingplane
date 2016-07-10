@@ -1,7 +1,6 @@
 CC=g++
-override CFLAGS+=-c -Wall --std=c++11
-override CFLAGSL+=
-override LDFLAGS+=
+override CFLAGS+=-c -Wall --std=c++11 -lglpk
+override LDFLAGS+=-lglpk
 
 SOURCES=graph.cpp main.cpp svg_output.cpp
 
@@ -11,10 +10,10 @@ OBJECTS=$(SOURCES:.cpp=.o)
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@ $(CFLAGSL)
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
 .cpp.o:
-	$(CC) $(CFLAGS) $< -o $@ $(CFLAGSL)
+	$(CC) $(CFLAGS) $< -o $@
 
 .PHONY: clean
 
