@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
 
     char col_name[256];
 
-    scale = 4;
+    scale  = 4;
     cycles = 0;
 
     lp = glp_create_prob();
@@ -53,8 +53,8 @@ int main(int argc, char *argv[]){
 
     glp_init_iocp(&parm_mip);
 
-    //parm_mip.msg_lev    = GLP_MSG_OFF;      // Output level
-    parm_mip.msg_lev    = GLP_MSG_ALL;      // Output level
+    parm_mip.msg_lev    = GLP_MSG_OFF;      // Output level
+    //parm_mip.msg_lev    = GLP_MSG_ALL;      // Output level
 
     //parm_mip.presolve   = GLP_OFF;          //
     parm_mip.presolve   = GLP_ON;           // MIP presolver
@@ -73,11 +73,11 @@ int main(int argc, char *argv[]){
     parm_mip.mir_cuts   = GLP_OFF;          //
     //parm_mip.mir_cuts   = GLP_ON;           // Mixed Integer Rounding Cuts
 
-    parm_mip.cov_cuts   = GLP_ON;           // Mixed Cover Cuts
-    //parm_mip.cov_cuts   = GLP_OFF;          //
+    parm_mip.cov_cuts   = GLP_OFF;          //
+    //parm_mip.cov_cuts   = GLP_ON;           // Mixed Cover Cuts
 
-    parm_mip.clq_cuts   = GLP_ON;           // Clique Cuts
-    //parm_mip.clq_cuts   = GLP_OFF;         //
+    parm_mip.clq_cuts   = GLP_OFF;         //
+    //parm_mip.clq_cuts   = GLP_ON;           // Clique Cuts
 
     /* BRANCHING */
     //parm_mip.br_tech    = GLP_BR_FFV;       // Branching method: first fractional value
@@ -94,6 +94,7 @@ int main(int argc, char *argv[]){
 
 
     glp_init_smcp(&parm_spx);
+    /* Message level for the simplex solver */
     parm_spx.msg_lev = GLP_MSG_ERR;
 
     std::cin >> n;
