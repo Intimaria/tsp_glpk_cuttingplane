@@ -1,7 +1,7 @@
 CC=g++
-CFLAGS=-c -Wall --std=c++11
-CFLAGSL=
-LDFLAGS=
+override CFLAGS+=-c -Wall --std=c++11
+override CFLAGSL+=
+override LDFLAGS+=
 
 SOURCES=graph.cpp main.cpp svg_output.cpp
 
