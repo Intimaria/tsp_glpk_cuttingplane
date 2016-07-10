@@ -56,50 +56,41 @@ int main(int argc, char *argv[]){
     //parm_mip.msg_lev    = GLP_MSG_OFF;      // Output level
     parm_mip.msg_lev    = GLP_MSG_ALL;      // Output level
 
-    if ( atoi(argv[1]) == 0 )
-        parm_mip.presolve   = GLP_OFF;          //
-    else
-        parm_mip.presolve   = GLP_ON;           // MIP presolver
+    //parm_mip.presolve   = GLP_OFF;          //
+    parm_mip.presolve   = GLP_ON;           // MIP presolver
 
-    if ( atoi(argv[2]) == 0 )
-        parm_mip.gmi_cuts   = GLP_OFF;          //
-    else
-        parm_mip.gmi_cuts   = GLP_ON;           // Gomory's intiger cuts
+    //parm_mip.pp_tech    = GLP_PP_NONE;      // No preprocessing
+    parm_mip.pp_tech    = GLP_PP_ROOT;      // Preprocessin only on root node
+    //parm_mip.pp_tech    = GLP_PP_ALL;       // Preprocessin on all nodes
 
-    if ( atoi(argv[3]) == 0 )
-        parm_mip.mir_cuts   = GLP_OFF;          //
-    else
-        parm_mip.mir_cuts   = GLP_ON;           // Mixed Integer Rounding Cuts
+    parm_mip.fp_heur    = GLP_OFF;          // Feasibility pump heuristic
+    //parm_mip.fp_heur    = GLP_ON;           // Feasibility pump heuristic
 
-    if ( atoi(argv[4]) == 0 )
-        parm_mip.pp_tech    = GLP_PP_NONE;      // No preprocessing
-    else if ( atoi(argv[4]) == 1 )
-        parm_mip.pp_tech    = GLP_PP_ROOT;      // Preprocessin only on root node
-    else
-        parm_mip.pp_tech    = GLP_PP_ALL;       // Preprocessin on all nodes
+    /* CUTS */
+    parm_mip.gmi_cuts   = GLP_OFF;          //
+    //parm_mip.gmi_cuts   = GLP_ON;           // Gomory's intiger cuts
 
-    if ( atoi(argv[5]) == 0 )
-        parm_mip.fp_heur    = GLP_OFF;          // Feasibility pump heuristic
-    else
-        parm_mip.fp_heur    = GLP_ON;           // Feasibility pump heuristic
+    parm_mip.mir_cuts   = GLP_OFF;          //
+    //parm_mip.mir_cuts   = GLP_ON;           // Mixed Integer Rounding Cuts
 
-
-    //parm_mip.cov_cuts   = GLP_ON;           // Mixed Cover Cuts
+    parm_mip.cov_cuts   = GLP_ON;           // Mixed Cover Cuts
     //parm_mip.cov_cuts   = GLP_OFF;          //
 
-    //parm_mip.clq_cuts   = GLP_ON;           // Clique Cuts
-    //parm_mip.clqr_cuts   = GLP_OFF;          //
+    parm_mip.clq_cuts   = GLP_ON;           // Clique Cuts
+    //parm_mip.clq_cuts   = GLP_OFF;         //
 
+    /* BRANCHING */
     //parm_mip.br_tech    = GLP_BR_FFV;       // Branching method: first fractional value
     //parm_mip.br_tech    = GLP_BR_LFV;       // Branching method: least fractional value
     //parm_mip.br_tech    = GLP_BR_MFV;       // Branching method: most  fractional value
     //parm_mip.br_tech    = GLP_BR_DTH;       // Branching method: Driebeck-Tomlin heuristic
     //parm_mip.br_tech    = GLP_BR_PCH;       // Branching method: Hybrid pseudocost heuristic
 
-    //parm_mip.bt_tech    = GLP_BT_DFS;       // Becktracking method: Depth first search
-    //parm_mip.bt_tech    = GLP_BT_BFS;       // Becktracking method: Breadth first seach
-    //parm_mip.bt_tech    = GLP_BT_BLB;       // Becktracking method: Best Local Bound
-    //parm_mip.bt_tech    = GLP_BT_BPH;       // Becktracking method: Best projection Heuristic
+    /* BACKTRACKING METHOD */
+    //parm_mip.bt_tech    = GLP_BT_DFS;       // Backtracking method: Depth first search
+    //parm_mip.bt_tech    = GLP_BT_BFS;       // Backtracking method: Breadth first seach
+    //parm_mip.bt_tech    = GLP_BT_BLB;       // Backtracking method: Best Local Bound
+    //parm_mip.bt_tech    = GLP_BT_BPH;       // Backtracking method: Best projection Heuristic
 
 
     glp_init_smcp(&parm_spx);
