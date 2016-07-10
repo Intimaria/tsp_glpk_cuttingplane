@@ -38,7 +38,7 @@ void save_svg(char *fname, std::vector<std::vector<double> > &solution, int n, s
     fprintf(fptr,"<?xml version=\"1.0\" standalone=\"no\"?>\n");
     fprintf(fptr,"<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \n");
     fprintf(fptr,"\"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n");
-    fprintf(fptr,"<svg width=\"%d\%\" height=\"%d\%\" version=\"1.0\" \n", screenx, screeny);
+    fprintf(fptr,"<svg width=\"%d%%\" height=\"%d%%\" version=\"1.0\" \n", screenx, screeny);
     fprintf(fptr,"xmlns=\"http://www.w3.org/2000/svg\">\n");
 
     //fprintf(fptr, "<rect width=\"%d\" height=\"%d\" style=\"fill:rgb(155,155,155);stroke-width:3;stroke:rgb(155,155,155)\" />\n", screenx, screeny);
