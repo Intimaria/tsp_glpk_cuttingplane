@@ -50,8 +50,6 @@ int get_index( int i, int j, int n){
 std::vector<std::vector<int> > find_all_cycles( std::vector<std::vector<double> > &solution, int n ) {
     std::vector<std::vector<int> > all_cycles;
 
-    int t_size;
-
     int *visited = (int*) malloc (sizeof(int) * n);
     int *preced  = (int*) malloc (sizeof(int) * n);
 
@@ -64,7 +62,7 @@ std::vector<std::vector<int> > find_all_cycles( std::vector<std::vector<double> 
         if ( visited[i] == 1 ) {
             continue;
         } else {
-            t_size = dfs(solution, n, visited, preced, i);
+            dfs(solution, n, visited, preced, i);
 
             std::vector<int> tt;
             int t = i;
@@ -86,9 +84,7 @@ std::vector<std::vector<int> > find_all_cycles( std::vector<std::vector<double> 
 }
 
 int dfs( std::vector<std::vector<double> > &solution, int n, int* visited, int *preced, int next ) {
-    if (visited[next] == 1 ) {
-        return 0;
-    } else {
+    if (visited[next] != 1 ) {
         for ( int i = 0 ; i < n ; i++ ) {
             if ( i == preced[next] ) continue;
             if ( solution[next][i] == 1 ) {
@@ -98,8 +94,7 @@ int dfs( std::vector<std::vector<double> > &solution, int n, int* visited, int *
             }
         }
     }
+
+    return 0;
 }
-
-
-
 
