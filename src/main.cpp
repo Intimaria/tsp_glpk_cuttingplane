@@ -55,8 +55,8 @@ int main(int argc, char *argv[]){
     //parm_mip.fp_heur    = GLP_ON;           // Feasibility pump heuristic
 
     /* CUTS */
-    parm_mip.gmi_cuts   = GLP_OFF;          //
-    //parm_mip.gmi_cuts   = GLP_ON;           // Gomory's intiger cuts
+    //parm_mip.gmi_cuts   = GLP_OFF;          //
+    parm_mip.gmi_cuts   = GLP_ON;           // Gomory's intiger cuts
 
     parm_mip.mir_cuts   = GLP_OFF;          //
     //parm_mip.mir_cuts   = GLP_ON;           // Mixed Integer Rounding Cuts
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
     //parm_mip.br_tech    = GLP_BR_FFV;       // Branching method: first fractional value
     //parm_mip.br_tech    = GLP_BR_LFV;       // Branching method: least fractional value
     //parm_mip.br_tech    = GLP_BR_MFV;       // Branching method: most  fractional value
-    //parm_mip.br_tech    = GLP_BR_DTH;       // Branching method: Driebeck-Tomlin heuristic
+    parm_mip.br_tech    = GLP_BR_DTH;       // Branching method: Driebeck-Tomlin heuristic
     //parm_mip.br_tech    = GLP_BR_PCH;       // Branching method: Hybrid pseudocost heuristic
 
     /* BACKTRACKING METHOD */
@@ -228,7 +228,7 @@ int main(int argc, char *argv[]){
             break;
         }
 
-        //printf("\nStep: %d \n found %d cycles\n", cycles, all_cycles.size());
+        printf("\nStep: %d \n found %d cycles\n", cycles, (int)all_cycles.size());
 
         int ind   = 0;
 
@@ -241,15 +241,18 @@ int main(int argc, char *argv[]){
         for ( unsigned int k = 0 ; k < all_cycles.size() ; k++ ){
             std::vector<int> small = all_cycles[k];
 
-            //if ( small.size() > 6 ) continue;
+            printf(" -> removing cycle of size %d: ", (int)small.size() - 1);
+
+            if ( small.size() > n/2 ) {
+                printf(" Too big, skipping...\n");
+                continue;
+            }
             //if ( all_cycles[k].size() != all_cycles[ind].size() ) continue;
 
-            //printf(" -> removing cycle of size %d: ", small.size() - 1);
-
-            //for ( int i = 0 ; i < small.size() ; i++ ) {
-                //printf("%d ", small[i]+1);
-            //}
-            //printf("\n");
+            for ( int i = 0 ; i < small.size() ; i++ ) {
+                printf("%d ", small[i]+1);
+            }
+            printf("\n");
 
             int new_row = glp_add_rows(lp, 1);
 
