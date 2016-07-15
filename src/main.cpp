@@ -243,7 +243,7 @@ int main(int argc, char *argv[]){
 
             printf(" -> removing cycle of size %d: ", (int)small.size() - 1);
 
-            if ( small.size() > n/2 ) {
+            if ( small.size() > n/2 + 1 ) {
                 printf(" Too big, skipping...\n");
                 continue;
             }
