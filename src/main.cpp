@@ -262,13 +262,29 @@ int main(int argc, char *argv[]){
             row.push_back(0);
             val.push_back(0);
 
-            for ( unsigned int i = 0 ; i < small.size()-1 ; i++ ) {
-                int index = get_index(small[i], small[i+1], n);
+            // Standard cut: removed a cycle only;
+            //for ( unsigned int i = 0 ; i < small.size()-1 ; i++ ) {
+                //int index = get_index(small[i], small[i+1], n);
 
-                //printf("%d %d %d %02d %d\n", i, small[i], small[i+1], index, small.size());
+                ////printf("%d %d %d %02d %d\n", i, small[i], small[i+1], index, small.size());
 
-                row.push_back(index);
-                val.push_back(1    );
+                //row.push_back(index);
+                //val.push_back(1    );
+            //}
+
+            /*
+             * Decent cut: Actually does a cut and removes all possible cycles to that "island"
+             * IT IS FAST!!!
+             */
+            for ( unsigned int i = 1 ; i < small.size()-1 ; i++ ) {
+                for ( unsigned int j = 0 ; j < i ; j++ ) {
+                    int index = get_index(small[j], small[i], n);
+
+                    //printf("%d %d %d %02d %d\n", i, small[i], small[i+1], index, small.size());
+
+                    row.push_back(index);
+                    val.push_back(1    );
+                }
             }
 
             glp_set_mat_row (lp, new_row, row.size()-1, &row[0], &val[0]);
